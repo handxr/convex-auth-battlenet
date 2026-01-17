@@ -6,6 +6,10 @@ const OAUTH_BASE = "https://oauth.battle.net";
 /**
  * Battle.net OAuth provider for Convex Auth
  *
+ * Works out-of-the-box with Convex Auth's default schema. Since Battle.net
+ * doesn't provide email addresses, a synthetic email is generated using
+ * the user's unique ID (e.g., "12345@battlenet.oauth").
+ *
  * @example
  * ```ts
  * import { convexAuth } from "@convex-dev/auth/server";
@@ -23,13 +27,13 @@ export function BattleNet(
 ): OAuthConfig<BattleNetProfile> {
   const { issuer, clientId, clientSecret, ...rest } = config ?? {};
   const base = issuer ?? OAUTH_BASE;
-  const id = clientId ?? process.env.AUTH_BATTLENET_ID;
-  const secret = clientSecret ?? process.env.AUTH_BATTLENET_SECRET;
 
   return {
     id: "battlenet",
     name: "Battle.net",
     type: "oauth",
+    clientId: clientId ?? process.env.AUTH_BATTLENET_ID,
+    clientSecret: clientSecret ?? process.env.AUTH_BATTLENET_SECRET,
     authorization: {
       url: `${base}/authorize`,
       params: { scope: "openid" },
@@ -49,34 +53,29 @@ export function BattleNet(
     userinfo: {
       url: `${base}/userinfo`,
       async request({ tokens }: { tokens: { access_token?: string } }) {
-        const res = await fetch(`${base}/userinfo`, {
+        const response = await fetch(`${base}/userinfo`, {
           headers: {
             Authorization: `Bearer ${tokens.access_token}`,
             Accept: "application/json",
           },
         });
-        if (!res.ok) {
-          throw new Error(`Userinfo request failed: ${res.status}`);
+        if (!response.ok) {
+          throw new Error(`Userinfo request failed: ${response.status}`);
         }
-        return res.json();
+        return response.json();
       },
     },
     checks: ["state"],
-    client: {
-      token_endpoint_auth_method: "client_secret_post",
-    },
-    clientId: id,
-    clientSecret: secret,
+    client: { token_endpoint_auth_method: "client_secret_post" },
     profile(profile: BattleNetProfile) {
       return {
         id: profile.sub,
         name: profile.battletag ?? profile.battle_tag,
+        // Synthetic email for Convex Auth compatibility (Battle.net doesn't provide emails)
+        email: `${profile.sub}@battlenet.oauth`,
       };
     },
-    style: {
-      bg: "#148eff",
-      text: "#fff",
-    },
+    style: { bg: "#148eff", text: "#fff" },
     ...rest,
   } as OAuthConfig<BattleNetProfile>;
 }

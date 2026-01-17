@@ -1,6 +1,7 @@
 /**
  * Battle.net OAuth issuer URLs
- * @see https://develop.battle.net/documentation/guides/using-oauth
+ * - Global: https://oauth.battle.net
+ * - China: https://oauth.battlenet.com.cn
  */
 export type BattleNetIssuer =
   | "https://oauth.battle.net"
@@ -12,8 +13,9 @@ export type BattleNetIssuer =
 export interface BattleNetProfile extends Record<string, unknown> {
   /** Unique user identifier */
   sub: string;
-  /** BattleTag (e.g., "Player#1234") - field name varies by response */
+  /** BattleTag (e.g., "Player#1234") */
   battletag?: string;
+  /** Alternative BattleTag field name */
   battle_tag?: string;
 }
 
@@ -22,20 +24,16 @@ export interface BattleNetProfile extends Record<string, unknown> {
  */
 export interface BattleNetConfig {
   /**
-   * OIDC issuer URL (region-specific)
+   * OAuth issuer URL
    * @default "https://oauth.battle.net"
    */
   issuer?: BattleNetIssuer;
-
   /**
-   * OAuth client ID
-   * If not provided, reads from AUTH_BATTLENET_ID environment variable
+   * OAuth client ID (falls back to AUTH_BATTLENET_ID env var)
    */
   clientId?: string;
-
   /**
-   * OAuth client secret
-   * If not provided, reads from AUTH_BATTLENET_SECRET environment variable
+   * OAuth client secret (falls back to AUTH_BATTLENET_SECRET env var)
    */
   clientSecret?: string;
 }

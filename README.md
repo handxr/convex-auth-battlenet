@@ -40,42 +40,21 @@ export const { auth, signIn, signOut, store } = convexAuth({
 });
 ```
 
+That's it! No custom schema or callbacks required.
+
 ## Configuration Options
 
 ```typescript
 BattleNet({
-  // Battle.net region: "us" | "eu" | "apac"
-  // Default: "us"
-  region: "eu",
-
-  // OAuth scopes to request
-  // Default: ["openid"]
-  scopes: ["openid", "wow.profile"],
+  // OAuth issuer URL (for China region use "https://oauth.battlenet.com.cn")
+  // Default: "https://oauth.battle.net"
+  issuer: "https://oauth.battlenet.com.cn",
 
   // Override client credentials (optional, reads from env vars by default)
   clientId: "your_client_id",
   clientSecret: "your_client_secret",
 });
 ```
-
-## Regions
-
-Each region uses different OAuth endpoints:
-
-| Region | Code | Issuer |
-|--------|------|--------|
-| United States | `us` | `https://us.battle.net/oauth` |
-| Europe | `eu` | `https://eu.battle.net/oauth` |
-| Asia Pacific | `apac` | `https://apac.battle.net/oauth` |
-
-> **Note:** China region is not supported due to different API requirements.
-
-## Available Scopes
-
-| Scope | Description |
-|-------|-------------|
-| `openid` | Required. Basic profile info (BattleTag) |
-| `wow.profile` | World of Warcraft characters, equipment, achievements |
 
 ## Frontend Usage
 
@@ -101,6 +80,9 @@ The provider maps the Battle.net profile to:
 |-------|--------|
 | `id` | `sub` (unique identifier) |
 | `name` | `battletag` (e.g., "Player#1234") |
+| `email` | Synthetic email (`{sub}@battlenet.oauth`) |
+
+> **Note:** Battle.net doesn't provide real email addresses. A synthetic email is generated for Convex Auth compatibility. This email cannot receive messages.
 
 ## TypeScript
 
@@ -110,8 +92,7 @@ Full TypeScript support with exported types:
 import type {
   BattleNetConfig,
   BattleNetProfile,
-  BattleNetRegion,
-  BattleNetScope,
+  BattleNetIssuer,
 } from "convex-auth-battlenet";
 ```
 
