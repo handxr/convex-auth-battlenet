@@ -8,34 +8,29 @@ export const VALID_SCOPES: readonly BattleNetScope[] = [
   "wow.profile",
   "sc2.profile",
   "d3.profile",
-] as const;
+];
 
 /**
- * Default scopes if none specified
- * OpenID is required for authentication
+ * Default scopes - openid is required for authentication
  */
-export const DEFAULT_SCOPES: readonly BattleNetScope[] = ["openid"] as const;
+export const DEFAULT_SCOPES: readonly BattleNetScope[] = ["openid"];
 
 /**
  * Build a space-separated scope string for OAuth requests
- *
- * @param scopes - Array of scopes to include
- * @returns Space-separated scope string
+ * Always includes openid as it's required for authentication
  */
 export function buildScopeString(scopes: BattleNetScope[]): string {
-  // Always include openid as it's required for authentication
-  const scopeSet = new Set<BattleNetScope>(["openid", ...scopes]);
-  return Array.from(scopeSet).join(" ");
+  if (scopes.includes("openid")) {
+    return scopes.join(" ");
+  }
+  return ["openid", ...scopes].join(" ");
 }
 
 /**
  * Validate that all provided scopes are valid Battle.net scopes
- *
- * @param scopes - Array of scopes to validate
- * @returns True if all scopes are valid
  * @throws Error if any scope is invalid
  */
-export function validateScopes(scopes: string[]): scopes is BattleNetScope[] {
+export function validateScopes(scopes: readonly string[]): void {
   const invalidScopes = scopes.filter(
     (scope) => !VALID_SCOPES.includes(scope as BattleNetScope)
   );
@@ -45,16 +40,4 @@ export function validateScopes(scopes: string[]): scopes is BattleNetScope[] {
       `Invalid Battle.net scopes: ${invalidScopes.join(", ")}. Valid scopes are: ${VALID_SCOPES.join(", ")}`
     );
   }
-
-  return true;
-}
-
-/**
- * Check if a scope is valid
- *
- * @param scope - The scope to check
- * @returns True if the scope is valid
- */
-export function isValidScope(scope: string): scope is BattleNetScope {
-  return VALID_SCOPES.includes(scope as BattleNetScope);
 }

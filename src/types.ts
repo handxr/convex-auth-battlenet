@@ -8,11 +8,7 @@ export type BattleNetRegion = "us" | "eu" | "apac";
  * Battle.net OAuth scopes
  * @see https://develop.battle.net/documentation/guides/using-oauth
  */
-export type BattleNetScope =
-  | "openid"
-  | "wow.profile"
-  | "sc2.profile"
-  | "d3.profile";
+export type BattleNetScope = "openid" | "wow.profile" | "sc2.profile" | "d3.profile";
 
 /**
  * Battle.net user profile returned from the userinfo endpoint
@@ -53,18 +49,4 @@ export interface BattleNetConfig {
    * If not provided, reads from AUTH_BATTLENET_SECRET environment variable
    */
   clientSecret?: string;
-}
-
-/**
- * OAuth endpoints for a Battle.net region
- */
-export interface RegionEndpoints {
-  /** Authorization endpoint URL */
-  authorization: string;
-  /** Token endpoint URL */
-  token: string;
-  /** Userinfo endpoint URL */
-  userinfo: string;
-  /** Issuer URL for OIDC */
-  issuer: string;
 }
