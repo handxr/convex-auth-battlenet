@@ -44,10 +44,6 @@ export const { auth, signIn, signOut, store } = convexAuth({
 
 ```typescript
 BattleNet({
-  // Battle.net region: "us" | "eu" | "apac"
-  // Default: "us"
-  region: "eu",
-
   // OAuth scopes to request
   // Default: ["openid"]
   scopes: ["openid", "wow.profile"],
@@ -66,16 +62,6 @@ BattleNet({
 | `wow.profile` | World of Warcraft profile data |
 | `sc2.profile` | StarCraft II profile data |
 | `d3.profile` | Diablo III profile data |
-
-## Regions
-
-| Region | Code |
-|--------|------|
-| United States | `us` |
-| Europe | `eu` |
-| Asia Pacific | `apac` |
-
-> **Note:** China region is not supported due to different API requirements.
 
 ## Frontend Usage
 
@@ -110,7 +96,6 @@ Full TypeScript support with exported types:
 import type {
   BattleNetConfig,
   BattleNetProfile,
-  BattleNetRegion,
   BattleNetScope,
 } from "convex-auth-battlenet";
 ```

@@ -1,10 +1,4 @@
 /**
- * Battle.net supported regions
- * Note: China (cn) region is not supported due to different API requirements
- */
-export type BattleNetRegion = "us" | "eu" | "apac";
-
-/**
  * Battle.net OAuth scopes
  * @see https://develop.battle.net/documentation/guides/using-oauth
  */
@@ -26,12 +20,6 @@ export interface BattleNetProfile {
  * Configuration options for the BattleNet provider
  */
 export interface BattleNetConfig {
-  /**
-   * Battle.net region
-   * @default "us"
-   */
-  region?: BattleNetRegion;
-
   /**
    * OAuth scopes to request
    * @default ["openid"]
