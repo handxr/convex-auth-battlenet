@@ -1,25 +1,20 @@
 /**
- * Battle.net supported regions
- * Note: China (cn) is not supported due to different API requirements
- */
-export type BattleNetRegion = "us" | "eu" | "apac";
-
-/**
- * Battle.net OAuth scopes
+ * Battle.net OAuth issuer URLs
  * @see https://develop.battle.net/documentation/guides/using-oauth
  */
-export type BattleNetScope = "openid" | "wow.profile";
+export type BattleNetIssuer =
+  | "https://oauth.battle.net"
+  | "https://oauth.battlenet.com.cn";
 
 /**
- * Battle.net user profile returned from the userinfo endpoint
+ * Battle.net user profile from the userinfo endpoint
  */
-export interface BattleNetProfile {
-  /** Unique identifier for the user */
+export interface BattleNetProfile extends Record<string, unknown> {
+  /** Unique user identifier */
   sub: string;
-  /** Battle.net ID (numeric) */
-  id: number;
-  /** BattleTag (e.g., "Player#1234") */
-  battletag: string;
+  /** BattleTag (e.g., "Player#1234") - field name varies by response */
+  battletag?: string;
+  battle_tag?: string;
 }
 
 /**
@@ -27,16 +22,10 @@ export interface BattleNetProfile {
  */
 export interface BattleNetConfig {
   /**
-   * Battle.net region
-   * @default "us"
+   * OIDC issuer URL (region-specific)
+   * @default "https://oauth.battle.net"
    */
-  region?: BattleNetRegion;
-
-  /**
-   * OAuth scopes to request
-   * @default ["openid"]
-   */
-  scopes?: BattleNetScope[];
+  issuer?: BattleNetIssuer;
 
   /**
    * OAuth client ID
