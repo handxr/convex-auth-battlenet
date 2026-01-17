@@ -75,9 +75,7 @@ Each region uses different OAuth endpoints:
 | Scope | Description |
 |-------|-------------|
 | `openid` | Required. Basic profile info (BattleTag) |
-| `wow.profile` | World of Warcraft profile data |
-| `sc2.profile` | StarCraft II profile data |
-| `d3.profile` | Diablo III profile data |
+| `wow.profile` | World of Warcraft characters, equipment, achievements |
 
 ## Frontend Usage
 

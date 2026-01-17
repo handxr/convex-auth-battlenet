@@ -6,8 +6,6 @@ import type { BattleNetScope } from "./types.js";
 export const VALID_SCOPES: readonly BattleNetScope[] = [
   "openid",
   "wow.profile",
-  "sc2.profile",
-  "d3.profile",
 ];
 
 /**

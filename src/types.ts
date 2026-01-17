@@ -8,7 +8,7 @@ export type BattleNetRegion = "us" | "eu" | "apac";
  * Battle.net OAuth scopes
  * @see https://develop.battle.net/documentation/guides/using-oauth
  */
-export type BattleNetScope = "openid" | "wow.profile" | "sc2.profile" | "d3.profile";
+export type BattleNetScope = "openid" | "wow.profile";
 
 /**
  * Battle.net user profile returned from the userinfo endpoint
