@@ -1,6 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "@auth/core/providers";
 import type { BattleNetConfig, BattleNetProfile } from "./types.js";
-import { OAUTH_BASE_URL } from "./regions.js";
+import { getIssuer, DEFAULT_REGION } from "./regions.js";
 import { buildScopeString, DEFAULT_SCOPES, validateScopes } from "./scopes.js";
 
 /**
@@ -12,7 +12,7 @@ import { buildScopeString, DEFAULT_SCOPES, validateScopes } from "./scopes.js";
  * import { BattleNet } from "convex-auth-battlenet";
  *
  * export const { auth, signIn, signOut, store } = convexAuth({
- *   providers: [BattleNet()],
+ *   providers: [BattleNet({ region: "eu" })],
  * });
  * ```
  *
@@ -21,7 +21,10 @@ import { buildScopeString, DEFAULT_SCOPES, validateScopes } from "./scopes.js";
 export function BattleNet(
   config?: BattleNetConfig & Partial<OAuthUserConfig<BattleNetProfile>>
 ): OAuthConfig<BattleNetProfile> {
+  const region = config?.region ?? DEFAULT_REGION;
+  const issuer = getIssuer(region);
   const scopes = config?.scopes ?? [...DEFAULT_SCOPES];
+
   if (config?.scopes) {
     validateScopes(config.scopes);
   }
@@ -30,13 +33,13 @@ export function BattleNet(
     id: "battlenet",
     name: "Battle.net",
     type: "oidc",
-    issuer: OAUTH_BASE_URL,
+    issuer,
     authorization: {
-      url: `${OAUTH_BASE_URL}/authorize`,
+      url: `${issuer}/authorize`,
       params: { scope: buildScopeString(scopes) },
     },
-    token: `${OAUTH_BASE_URL}/token`,
-    userinfo: `${OAUTH_BASE_URL}/userinfo`,
+    token: `${issuer}/token`,
+    userinfo: `${issuer}/userinfo`,
     checks: ["pkce", "state"],
     clientId: config?.clientId ?? process.env.AUTH_BATTLENET_ID,
     clientSecret: config?.clientSecret ?? process.env.AUTH_BATTLENET_SECRET,
