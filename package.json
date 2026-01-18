@@ -26,8 +26,9 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "test": "bun test",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build && bun run test"
   },
   "keywords": [
     "convex",
@@ -40,7 +41,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/convex-auth-battlenet"
+    "url": "https://github.com/juanhander/convex-auth-battlenet"
   },
   "peerDependencies": {
     "@auth/core": ">=0.35.0",

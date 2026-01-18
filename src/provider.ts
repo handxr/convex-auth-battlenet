@@ -41,7 +41,20 @@ export function BattleNet(
     token: {
       url: `${base}/token`,
       async conform(response: Response) {
-        // Strip id_token to avoid nonce validation issues with oauth4webapi
+        /**
+         * Battle.net returns an id_token even though we only request the "openid" scope.
+         * The oauth4webapi library (used by @auth/core) performs strict nonce validation
+         * on id_tokens, but Battle.net's id_token doesn't always pass this validation.
+         *
+         * Since we're using the OAuth 2.0 authorization code flow (not pure OIDC),
+         * we don't need the id_token - we fetch user info directly from the userinfo
+         * endpoint using the access_token instead.
+         *
+         * This is a safe workaround because:
+         * 1. We use PKCE + state for request validation
+         * 2. User identity is verified via the userinfo endpoint
+         * 3. The access_token is sufficient for our authentication needs
+         */
         const data = await response.json();
         delete data.id_token;
         return new Response(JSON.stringify(data), {
@@ -65,7 +78,7 @@ export function BattleNet(
         return response.json();
       },
     },
-    checks: ["state"],
+    checks: ["state", "pkce"],
     client: { token_endpoint_auth_method: "client_secret_post" },
     profile(profile: BattleNetProfile) {
       return {
